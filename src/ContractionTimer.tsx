@@ -418,6 +418,25 @@ export default function ContractionTimer() {
             <div className="text-lg font-medium mt-2">Contraction Timer</div>
             <div className="ct-faint text-sm tabular-nums mt-1">Build {BUILD_ID}</div>
 
+            <div className="mt-4 flex flex-col gap-1.5">
+              <a
+                href="https://www.linkedin.com/in/dudleycaleb/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ct-accent text-sm"
+              >
+                Created by Caleb Dudley
+              </a>
+              <a
+                href="https://github.com/ca1ebd/contraction-timer"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ct-accent text-sm"
+              >
+                View source on GitHub
+              </a>
+            </div>
+
             <button
               onClick={() => setShowAbout(false)}
               className="mt-6 w-full py-3.5 rounded-xl font-medium"
