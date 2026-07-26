@@ -269,8 +269,8 @@ export default function ContractionTimer() {
       <div className="flex-1 overflow-y-auto px-5 py-6">
         {list.length === 0 ? (
           <p className="ct-muted text-sm leading-relaxed select-text">
-            Tap start when a contraction begins, stop when it ends. Afterwards, tap a dot to fix
-            its length or tap the line between dots to fix the time apart.
+            Tap start when a contraction begins, stop when it ends. Tap a contraction dot to
+            change its length or tap the line between dots to adjust the time between contractions.
           </p>
         ) : (
           rev.map((c, ri) => {
