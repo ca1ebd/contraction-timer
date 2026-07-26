@@ -4,9 +4,6 @@ Offline-first PWA for timing labor contractions. One primary button (start/stop)
 a timeline of past contractions sized by duration and spaced by interval, and
 coarse-stepper editors for fixing a contraction's length or the gap between two.
 
-Built for one person, in labor, on a phone, possibly on bad hospital wifi. Everything
-is device-local: no backend, no analytics, no network requests at runtime.
-
 ## Stack
 
 - Vite + React + TypeScript
