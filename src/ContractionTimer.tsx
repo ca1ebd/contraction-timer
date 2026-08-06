@@ -214,12 +214,12 @@ export default function ContractionTimer() {
   `;
 
   if (!loaded) {
-    return <div className="min-h-dvh" style={{ background: T.bg }} />;
+    return <div className="h-dvh" style={{ background: T.bg }} />;
   }
 
   return (
     <div
-      className="ct-root min-h-dvh flex flex-col select-none"
+      className="ct-root h-dvh flex flex-col select-none"
       style={{
         fontFamily: "ui-sans-serif, system-ui, -apple-system, sans-serif",
         paddingTop: "env(safe-area-inset-top)",
@@ -230,7 +230,7 @@ export default function ContractionTimer() {
     >
       <style>{css}</style>
 
-      <div className="px-5 pt-6 pb-4 border-b ct-border">
+      <div className="shrink-0 px-5 pt-6 pb-4 border-b ct-border">
         <div className="flex items-center justify-between">
           <span className="ct-muted text-[11px] uppercase tracking-[0.2em] font-medium">
             {runningStart != null ? "Contraction" : "Last hour"}
@@ -266,7 +266,7 @@ export default function ContractionTimer() {
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 py-6">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 py-6">
         {list.length === 0 ? (
           <p className="ct-muted text-sm leading-relaxed select-text">
             Tap start when a contraction begins, stop when it ends. Tap a contraction dot to
@@ -313,7 +313,7 @@ export default function ContractionTimer() {
         )}
       </div>
 
-      <div className="px-5 pt-3 pb-5 border-t ct-border">
+      <div className="shrink-0 px-5 pt-3 pb-5 border-t ct-border">
         <div className="flex justify-between items-center">
           <button onClick={addManual} className="ct-muted text-sm py-2">
             Add missed contraction
