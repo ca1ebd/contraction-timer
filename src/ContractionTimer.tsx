@@ -22,6 +22,7 @@ type Edit =
 
 type ThemeColors = {
   bg: string;
+  backdrop: string;
   surface: string;
   chip: string;
   press: string;
@@ -37,6 +38,7 @@ type ThemeColors = {
 const THEMES: Record<Theme, ThemeColors> = {
   dark: {
     bg: "#12101a",
+    backdrop: "#08070d",
     surface: "#241e36",
     chip: "#241e36",
     press: "#3a3059",
@@ -50,6 +52,7 @@ const THEMES: Record<Theme, ThemeColors> = {
   },
   light: {
     bg: "#fdf8f9",
+    backdrop: "#e6dee1",
     surface: "#ffffff",
     chip: "#efdee4",
     press: "#f0e6ea",
@@ -214,150 +217,158 @@ export default function ContractionTimer() {
   `;
 
   if (!loaded) {
-    return <div className="h-dvh" style={{ background: T.bg }} />;
+    return <div className="h-dvh" style={{ background: T.backdrop }} />;
   }
 
   return (
     <div
-      className="ct-root h-dvh flex flex-col select-none"
-      style={{
-        fontFamily: "ui-sans-serif, system-ui, -apple-system, sans-serif",
-        paddingTop: "env(safe-area-inset-top)",
-        paddingBottom: "env(safe-area-inset-bottom)",
-        paddingLeft: "env(safe-area-inset-left)",
-        paddingRight: "env(safe-area-inset-right)",
-      }}
+      className="h-dvh flex flex-col md:items-center md:justify-center md:p-8"
+      style={{ background: T.backdrop }}
     >
       <style>{css}</style>
 
-      <div className="shrink-0 px-5 pt-6 pb-4 border-b ct-border">
-        <div className="flex items-center justify-between">
-          <span className="ct-muted text-[11px] uppercase tracking-[0.2em] font-medium">
-            {runningStart != null ? "Contraction" : "Last hour"}
-          </span>
-          <div className="flex items-center gap-4">
-            <span className="ct-muted text-[11px] tabular-nums">
-              {recent.length} in 60 min
-            </span>
-            <button onClick={flipTheme} className="ct-muted text-[11px] py-1" aria-label="Switch theme">
-              {theme === "dark" ? "Light" : "Dark"}
-            </button>
-            <button onClick={() => setShowAbout(true)} className="ct-muted text-[11px] py-1" aria-label="About">
-              About
-            </button>
-          </div>
-        </div>
-
-        {runningStart != null ? (
-          <div className="ct-accent mt-1 text-6xl font-light tabular-nums tracking-tight">
-            {fmt(live)}
-          </div>
-        ) : (
-          <div className="mt-1 flex gap-8">
-            <div>
-              <div className="text-4xl font-light tabular-nums">{fmt(avgDur)}</div>
-              <div className="ct-muted text-[11px] mt-0.5">avg length</div>
-            </div>
-            <div>
-              <div className="text-4xl font-light tabular-nums">{fmt(avgGap)}</div>
-              <div className="ct-muted text-[11px] mt-0.5">avg apart</div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 py-6">
-        {list.length === 0 ? (
-          <p className="ct-muted text-sm leading-relaxed select-text">
-            Tap start when a contraction begins, stop when it ends. Tap a contraction dot to
-            change its length or tap the line between dots to adjust the time between contractions.
-          </p>
-        ) : (
-          rev.map((c, ri) => {
-            const i = list.length - 1 - ri;
-            return (
-              <div key={c.id} className="w-full">
-                <button onClick={() => openDot(i)} className="ct-row flex items-center gap-4 w-full text-left">
-                  <span className="w-14 flex justify-center shrink-0">
-                    <span
-                      className="ct-dot rounded-full"
-                      style={{ width: dotSize(c.dur), height: dotSize(c.dur) }}
-                    />
-                  </span>
-                  <span className="flex-1 flex items-baseline gap-2">
-                    <span className="text-lg tabular-nums">{fmt(c.dur)}</span>
-                    <span className="ct-faint text-[11px]">long</span>
-                  </span>
-                  <span className="ct-faint text-[11px] tabular-nums">{clock(c.start)}</span>
-                </button>
-
-                {i > 0 && (
-                  <button onClick={() => openGap(i)} className="ct-row flex items-stretch gap-4 w-full text-left">
-                    <span className="w-14 flex justify-center shrink-0">
-                      <span
-                        className="ct-line w-[3px] rounded-full"
-                        style={{ height: lineLen(gapOf(i)) }}
-                      />
-                    </span>
-                    <span
-                      className="ct-muted flex-1 flex items-center text-[13px] tabular-nums"
-                      style={{ minHeight: lineLen(gapOf(i)) }}
-                    >
-                      {fmt(gapOf(i))} apart
-                    </span>
-                  </button>
-                )}
-              </div>
-            );
-          })
-        )}
-      </div>
-
-      <div className="shrink-0 px-5 pt-3 pb-5 border-t ct-border">
-        <div className="flex justify-between items-center">
-          <button onClick={addManual} className="ct-muted text-sm py-2">
-            Add missed contraction
-          </button>
-          {confirmClear ? (
-            <span className="flex gap-4">
-              <button
-                onClick={() => {
-                  commit([], null);
-                  setConfirmClear(false);
-                }}
-                className="ct-accent text-sm py-2 font-medium"
-              >
-                Erase all
-              </button>
-              <button onClick={() => setConfirmClear(false)} className="ct-muted text-sm py-2">
-                Keep
-              </button>
-            </span>
-          ) : (
-            <button onClick={() => setConfirmClear(true)} className="ct-faint text-sm py-2">
-              Clear log
-            </button>
-          )}
-        </div>
-
-        <button
-          onClick={toggle}
-          className={`mt-3 w-full py-4 rounded-2xl text-base font-semibold ${
-            runningStart != null ? "ct-go" : "ct-chip"
-          }`}
+      <div className="w-full flex-1 min-h-0 flex md:max-w-[1200px] md:items-center md:justify-center">
+        <div
+          className="ct-root w-full h-full min-h-0 flex flex-col select-none md:max-w-[560px] md:h-[min(880px,calc(100dvh-4rem))] md:rounded-[28px] md:border md:shadow-2xl md:overflow-hidden"
+          style={{
+            fontFamily: "ui-sans-serif, system-ui, -apple-system, sans-serif",
+            paddingTop: "env(safe-area-inset-top)",
+            paddingBottom: "env(safe-area-inset-bottom)",
+            paddingLeft: "env(safe-area-inset-left)",
+            paddingRight: "env(safe-area-inset-right)",
+            borderColor: T.line,
+          }}
         >
-          {runningStart != null ? "Stop" : "Start contraction"}
-        </button>
+          <div className="shrink-0 px-5 pt-6 pb-4 border-b ct-border">
+            <div className="flex items-center justify-between">
+              <span className="ct-muted text-[11px] uppercase tracking-[0.2em] font-medium">
+                {runningStart != null ? "Contraction" : "Last hour"}
+              </span>
+              <div className="flex items-center gap-4">
+                <span className="ct-muted text-[11px] tabular-nums">
+                  {recent.length} in 60 min
+                </span>
+                <button onClick={flipTheme} className="ct-muted text-[11px] py-1" aria-label="Switch theme">
+                  {theme === "dark" ? "Light" : "Dark"}
+                </button>
+                <button onClick={() => setShowAbout(true)} className="ct-muted text-[11px] py-1" aria-label="About">
+                  About
+                </button>
+              </div>
+            </div>
+
+            {runningStart != null ? (
+              <div className="ct-accent mt-1 text-6xl font-light tabular-nums tracking-tight">
+                {fmt(live)}
+              </div>
+            ) : (
+              <div className="mt-1 flex gap-8">
+                <div>
+                  <div className="text-4xl font-light tabular-nums">{fmt(avgDur)}</div>
+                  <div className="ct-muted text-[11px] mt-0.5">avg length</div>
+                </div>
+                <div>
+                  <div className="text-4xl font-light tabular-nums">{fmt(avgGap)}</div>
+                  <div className="ct-muted text-[11px] mt-0.5">avg apart</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 py-6">
+            {list.length === 0 ? (
+              <p className="ct-muted text-sm leading-relaxed select-text">
+                Tap start when a contraction begins, stop when it ends. Tap a contraction dot to
+                change its length or tap the line between dots to adjust the time between contractions.
+              </p>
+            ) : (
+              rev.map((c, ri) => {
+                const i = list.length - 1 - ri;
+                return (
+                  <div key={c.id} className="w-full">
+                    <button onClick={() => openDot(i)} className="ct-row flex items-center gap-4 w-full text-left">
+                      <span className="w-14 flex justify-center shrink-0">
+                        <span
+                          className="ct-dot rounded-full"
+                          style={{ width: dotSize(c.dur), height: dotSize(c.dur) }}
+                        />
+                      </span>
+                      <span className="flex-1 flex items-baseline gap-2">
+                        <span className="text-lg tabular-nums">{fmt(c.dur)}</span>
+                        <span className="ct-faint text-[11px]">long</span>
+                      </span>
+                      <span className="ct-faint text-[11px] tabular-nums">{clock(c.start)}</span>
+                    </button>
+
+                    {i > 0 && (
+                      <button onClick={() => openGap(i)} className="ct-row flex items-stretch gap-4 w-full text-left">
+                        <span className="w-14 flex justify-center shrink-0">
+                          <span
+                            className="ct-line w-[3px] rounded-full"
+                            style={{ height: lineLen(gapOf(i)) }}
+                          />
+                        </span>
+                        <span
+                          className="ct-muted flex-1 flex items-center text-[13px] tabular-nums"
+                          style={{ minHeight: lineLen(gapOf(i)) }}
+                        >
+                          {fmt(gapOf(i))} apart
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          <div className="shrink-0 px-5 pt-3 pb-5 border-t ct-border">
+            <div className="flex justify-between items-center">
+              <button onClick={addManual} className="ct-muted text-sm py-2">
+                Add missed contraction
+              </button>
+              {confirmClear ? (
+                <span className="flex gap-4">
+                  <button
+                    onClick={() => {
+                      commit([], null);
+                      setConfirmClear(false);
+                    }}
+                    className="ct-accent text-sm py-2 font-medium"
+                  >
+                    Erase all
+                  </button>
+                  <button onClick={() => setConfirmClear(false)} className="ct-muted text-sm py-2">
+                    Keep
+                  </button>
+                </span>
+              ) : (
+                <button onClick={() => setConfirmClear(true)} className="ct-faint text-sm py-2">
+                  Clear log
+                </button>
+              )}
+            </div>
+
+            <button
+              onClick={toggle}
+              className={`mt-3 w-full py-4 rounded-2xl text-base font-semibold ${
+                runningStart != null ? "ct-go" : "ct-chip"
+              }`}
+            >
+              {runningStart != null ? "Stop" : "Start contraction"}
+            </button>
+          </div>
+        </div>
       </div>
 
       {edit && (
         <div
-          className="fixed inset-0 flex items-end"
+          className="fixed inset-0 flex items-end md:items-center md:justify-center"
           style={{ background: "rgba(0,0,0,0.55)" }}
           onClick={() => setEdit(null)}
         >
           <div
-            className="ct-surface w-full rounded-t-3xl p-6"
+            className="ct-surface w-full rounded-t-3xl p-6 md:max-w-sm md:rounded-3xl"
             style={{ color: T.text, paddingBottom: "calc(2rem + env(safe-area-inset-bottom))" }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -405,12 +416,12 @@ export default function ContractionTimer() {
 
       {showAbout && (
         <div
-          className="fixed inset-0 flex items-end"
+          className="fixed inset-0 flex items-end md:items-center md:justify-center"
           style={{ background: "rgba(0,0,0,0.55)" }}
           onClick={() => setShowAbout(false)}
         >
           <div
-            className="ct-surface w-full rounded-t-3xl p-6"
+            className="ct-surface w-full rounded-t-3xl p-6 md:max-w-sm md:rounded-3xl"
             style={{ color: T.text, paddingBottom: "calc(2rem + env(safe-area-inset-bottom))" }}
             onClick={(e) => e.stopPropagation()}
           >
