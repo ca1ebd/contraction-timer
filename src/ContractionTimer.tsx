@@ -82,6 +82,7 @@ export default function ContractionTimer() {
   const [loaded, setLoaded] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
+  const [copiedBuild, setCopiedBuild] = useState(false);
 
   const T = THEMES[theme];
 
@@ -138,6 +139,23 @@ export default function ContractionTimer() {
     const next: Theme = theme === "dark" ? "light" : "dark";
     setTheme(next);
     persist(list, runningStart, next);
+  };
+
+  // Long-pressing to select a 7-character sha inside a sheet is fiddly on a
+  // phone, so the whole line is a copy target. It stays selectable too, for
+  // anyone on a desktop who would rather drag across it.
+  const copyBuild = async () => {
+    try {
+      await navigator.clipboard.writeText(BUILD_ID);
+      setCopiedBuild(true);
+    } catch {
+      /* clipboard blocked -- selecting the text still works */
+    }
+  };
+
+  const closeAbout = () => {
+    setShowAbout(false);
+    setCopiedBuild(false);
   };
 
   const toggle = () => {
@@ -245,9 +263,6 @@ export default function ContractionTimer() {
                 {runningStart != null ? "Contraction" : "Last hour"}
               </span>
               <div className="flex items-center gap-4">
-                <span className="ct-muted text-[11px] tabular-nums">
-                  {recent.length} in 60 min
-                </span>
                 <button onClick={flipTheme} className="ct-muted text-[11px] py-1" aria-label="Switch theme">
                   {theme === "dark" ? "Light" : "Dark"}
                 </button>
@@ -344,7 +359,7 @@ export default function ContractionTimer() {
                 </span>
               ) : (
                 <button onClick={() => setConfirmClear(true)} className="ct-faint text-sm py-2">
-                  Clear log
+                  Clear
                 </button>
               )}
             </div>
@@ -418,7 +433,7 @@ export default function ContractionTimer() {
         <div
           className="fixed inset-0 flex items-end md:items-center md:justify-center"
           style={{ background: "rgba(0,0,0,0.55)" }}
-          onClick={() => setShowAbout(false)}
+          onClick={closeAbout}
         >
           <div
             className="ct-surface w-full rounded-t-3xl p-6 md:max-w-sm md:rounded-3xl"
@@ -447,10 +462,16 @@ export default function ContractionTimer() {
               </a>
             </div>
 
-            <div className="ct-faint text-sm tabular-nums mt-4">Build {BUILD_ID}</div>
+            <button
+              onClick={copyBuild}
+              className="ct-faint text-sm tabular-nums mt-4 select-text text-left"
+            >
+              Build {BUILD_ID}
+              {copiedBuild ? " · copied" : ""}
+            </button>
 
             <button
-              onClick={() => setShowAbout(false)}
+              onClick={closeAbout}
               className="mt-6 w-full py-3.5 rounded-xl font-medium"
               style={{ background: T.press }}
             >

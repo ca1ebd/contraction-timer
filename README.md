@@ -31,3 +31,11 @@ Hosted on Azure Static Web Apps via the GitHub Actions workflow in
 `.github/workflows/azure-static-web-apps.yml` (build command `npm run build`,
 output location `dist`). Requires an `AZURE_STATIC_WEB_APPS_API_TOKEN` repo
 secret from the Azure Static Web App resource.
+
+## Domain
+
+DNS for `contraction-timer.calebdudley.dev` (prod) and
+`contraction-timer.test.calebdudley.dev` (test) is managed centrally in
+the private `caleb-dudley-dev` repo via Terraform — see that repo's
+README for the full project inventory and
+`docs/adding-a-project.md` for how to change it.
