@@ -263,9 +263,6 @@ export default function ContractionTimer() {
                 {runningStart != null ? "Contraction" : "Last hour"}
               </span>
               <div className="flex items-center gap-4">
-                <span className="ct-muted text-[11px] tabular-nums">
-                  {recent.length} in 60 min
-                </span>
                 <button onClick={flipTheme} className="ct-muted text-[11px] py-1" aria-label="Switch theme">
                   {theme === "dark" ? "Light" : "Dark"}
                 </button>
