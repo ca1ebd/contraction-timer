@@ -359,7 +359,7 @@ export default function ContractionTimer() {
                 </span>
               ) : (
                 <button onClick={() => setConfirmClear(true)} className="ct-faint text-sm py-2">
-                  Clear log
+                  Clear
                 </button>
               )}
             </div>
